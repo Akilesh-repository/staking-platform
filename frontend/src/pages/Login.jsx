@@ -27,7 +27,7 @@ function Login() {
     e.preventDefault();
     try {
       // ✅ FIXED: Explicitly pointing to Localhost 5000
-      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const res = await axios.post('/api/auth/login', formData);
       
       // Save user info to browser storage
       localStorage.setItem('user', JSON.stringify(res.data));

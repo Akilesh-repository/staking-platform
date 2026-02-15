@@ -106,7 +106,8 @@ function IncomeHistory() {
 
   const fetchIncome = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/stake/income/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/stake/income/${userId}`);
       setIncomes(res.data);
       
       // Calculate total

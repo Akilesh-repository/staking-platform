@@ -104,7 +104,8 @@ function StakingHistory() {
 
   const fetchHistory = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/stake/history/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/stake/history/${userId}`);
       setInvestments(res.data);
       setLoading(false);
     } catch (err) {

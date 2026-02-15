@@ -127,8 +127,10 @@ function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      // ✅ CHANGED: Removed http://localhost:5000 to work on deployed site
+      
       // A. Fetch Users
-      const usersRes = await axios.get('http://localhost:5000/api/admin/users/all');
+      const usersRes = await axios.get('/api/admin/users/all');
       const allUsers = usersRes.data;
       
       // Calculate new users this week
@@ -137,12 +139,12 @@ function AdminDashboard() {
       const newUsers = allUsers.filter(u => new Date(u.createdAt) > oneWeekAgo).length;
 
       // B. Fetch Investments
-      const stakesRes = await axios.get('http://localhost:5000/api/stake/admin/all');
+      const stakesRes = await axios.get('/api/stake/admin/all');
       const activeInvestments = stakesRes.data.filter(inv => inv.status === 'active');
       const totalValue = activeInvestments.reduce((sum, inv) => sum + inv.planAmount, 0);
 
       // C. Fetch Pending Requests
-      const walletRes = await axios.get('http://localhost:5000/api/wallet/admin/pending');
+      const walletRes = await axios.get('/api/wallet/admin/pending');
 
       setStats({
         totalUsers: allUsers.length,

@@ -134,7 +134,8 @@ function BankManagement() {
 
   const fetchBanks = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/bank/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/bank/${userId}`);
       setBanks(res.data);
     } catch (err) {
       console.error("Error fetching banks");
@@ -145,7 +146,8 @@ function BankManagement() {
     if (!window.confirm("Are you sure you want to delete this bank account?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/bank/${bankId}`);
+      // ✅ CHANGED: Removed localhost
+      await axios.delete(`/api/bank/${bankId}`);
       fetchBanks(user._id);
     } catch (err) {
       alert("Failed to delete bank");
@@ -159,7 +161,8 @@ function BankManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/bank/add', {
+      // ✅ CHANGED: Removed localhost
+      await axios.post('/api/bank/add', {
         userId: user._id,
         ...formData
       });

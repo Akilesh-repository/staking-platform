@@ -120,7 +120,8 @@ function AdminDepositRequest() {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/wallet/admin/pending');
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get('/api/wallet/admin/pending');
       setRequests(res.data);
     } catch (err) {
       console.error("Error fetching requests:", err);
@@ -130,7 +131,8 @@ function AdminDepositRequest() {
   const handleAction = async (transactionId, type, action) => {
     const finalAction = (type === 'withdraw' && action === 'approve') ? 'paid' : action;
     try {
-      const res = await axios.post('http://localhost:5000/api/wallet/admin/handle', {
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/wallet/admin/handle', {
         transactionId,
         action: finalAction 
       });

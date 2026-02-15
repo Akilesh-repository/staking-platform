@@ -119,7 +119,8 @@ function AdminStaking() {
 
   const fetchAllInvestments = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/stake/admin/all');
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get('/api/stake/admin/all');
       setInvestments(res.data);
       setLoading(false);
     } catch (err) {
@@ -135,7 +136,8 @@ function AdminStaking() {
     if (!confirm) return;
 
     try {
-      await axios.put('http://localhost:5000/api/stake/admin/status', {
+      // ✅ CHANGED: Removed localhost
+      await axios.put('/api/stake/admin/status', {
         investmentId: id,
         status: newStatus
       });
@@ -410,8 +412,6 @@ function AdminStaking() {
         <div style={styles.navItem} onClick={() => navigate('/admin-users')}>
           <UsersIcon /> <span>Users</span>
         </div>
-
-        
 
         <button 
           onClick={handleLogout} 

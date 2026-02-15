@@ -119,7 +119,8 @@ function ReferralHub() {
 
   const fetchReferralStats = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/auth/referrals/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/auth/referrals/${userId}`);
       setData(res.data);
     } catch (err) {
       console.error("Error fetching stats");

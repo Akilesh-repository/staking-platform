@@ -9,7 +9,8 @@ function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/login', formData);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/admin/login', formData);
       // Save admin info
       localStorage.setItem('admin', JSON.stringify(res.data));
       navigate('/admin-dashboard');

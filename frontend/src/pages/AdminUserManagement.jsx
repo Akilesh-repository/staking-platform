@@ -120,7 +120,8 @@ function AdminUserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/users/all');
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get('/api/admin/users/all');
       setUsers(res.data);
     } catch (err) {
       console.error("Error fetching users");
@@ -134,7 +135,8 @@ function AdminUserManagement() {
     if(!window.confirm(`Are you sure you want to ${currentStatus ? 'UNBLOCK' : 'BLOCK'} this user?`)) return;
     
     try {
-      await axios.put('http://localhost:5000/api/admin/users/status', {
+      // ✅ CHANGED: Removed localhost
+      await axios.put('/api/admin/users/status', {
         userId,
         isBlocked: !currentStatus
       });
@@ -156,7 +158,8 @@ function AdminUserManagement() {
   const handleAdjustSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/admin/users/adjust-balance', {
+      // ✅ CHANGED: Removed localhost
+      await axios.post('/api/admin/users/adjust-balance', {
         userId: selectedUser._id,
         ...adjustData
       });

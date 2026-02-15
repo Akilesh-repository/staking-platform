@@ -117,7 +117,8 @@ function CreateStake() {
 
   const fetchWallet = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/wallet/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/wallet/${userId}`);
       setWalletBalance(res.data.balance);
     } catch (err) {
       console.error("Error fetching wallet");
@@ -136,7 +137,8 @@ function CreateStake() {
     if (!confirm) return;
 
     try {
-      const res = await axios.post('http://localhost:5000/api/stake/invest', {
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/stake/invest', {
         userId: user._id,
         amount: Number(selectedAmount),
         mode: 'standard' 

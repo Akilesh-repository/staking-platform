@@ -144,7 +144,8 @@ function Wallet() {
 
   const fetchWalletData = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/wallet/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
       setHistory(res.data.history);
     } catch (err) {
@@ -157,7 +158,8 @@ function Wallet() {
     if (!amount || !transactionId) return alert("Please fill all details");
 
     try {
-      await axios.post('http://localhost:5000/api/wallet/deposit', {
+      // ✅ CHANGED: Removed localhost
+      await axios.post('/api/wallet/deposit', {
         userId: user._id,
         amount: Number(amount),
         transactionId
@@ -253,7 +255,7 @@ function Wallet() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '8px'
+      gap: '10px'
     },
 
     // MAIN CONTENT

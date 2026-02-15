@@ -29,7 +29,8 @@ function ForgotPassword() {
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/password-reset/request-otp', { email });
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/password-reset/request-otp', { email });
       alert(res.data.message); 
       setStep(2); 
     } catch (err) {
@@ -41,7 +42,8 @@ function ForgotPassword() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/password-reset/reset', { 
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/password-reset/reset', { 
         email, 
         otp, 
         newPassword 

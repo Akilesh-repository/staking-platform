@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,6 +54,7 @@ const MenuIcon = () => (
   </svg>
 );
 
+// Page Specific Icons
 const BackIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -113,7 +114,8 @@ function Withdraw() {
 
   const fetchBalance = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/wallet/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
     } catch (err) {
       console.error("Error fetching balance");
@@ -122,7 +124,8 @@ function Withdraw() {
 
   const fetchSavedBanks = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/bank/${userId}`);
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.get(`/api/bank/${userId}`);
       setSavedBanks(res.data); 
     } catch (err) {
       console.log("No saved banks found.");
@@ -162,7 +165,8 @@ function Withdraw() {
     if (Number(amount) <= 0) return alert("Enter a valid amount");
 
     try {
-      await axios.post('http://localhost:5000/api/wallet/withdraw', {
+      // ✅ CHANGED: Removed localhost
+      await axios.post('/api/wallet/withdraw', {
         userId: user._id,
         amount: Number(amount), 
         bankDetails

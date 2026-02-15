@@ -21,7 +21,8 @@ function OtpVerify() {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/verify-otp', { email, otp });
+      // ✅ CHANGED: Removed localhost
+      const res = await axios.post('/api/auth/verify-otp', { email, otp });
       alert(res.data.message); // "Account Verified Successfully"
       navigate('/login'); // Send to login page
     } catch (err) {

@@ -120,7 +120,6 @@ function AdminDepositRequest() {
 
   const fetchRequests = async () => {
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.get('/api/wallet/admin/pending');
       setRequests(res.data);
     } catch (err) {
@@ -131,7 +130,6 @@ function AdminDepositRequest() {
   const handleAction = async (transactionId, type, action) => {
     const finalAction = (type === 'withdraw' && action === 'approve') ? 'paid' : action;
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.post('/api/wallet/admin/handle', {
         transactionId,
         action: finalAction 
@@ -243,9 +241,10 @@ function AdminDepositRequest() {
     main: {
       marginLeft: isMobile ? 0 : '260px', 
       flex: 1,
-      padding: isMobile ? '20px' : '40px 60px', 
+      padding: isMobile ? '20px 15px' : '40px 60px', 
       width: '100%',
-      transition: 'margin-left 0.3s ease-in-out'
+      transition: 'margin-left 0.3s ease-in-out',
+      boxSizing: 'border-box'
     },
     
     // Header
@@ -288,30 +287,34 @@ function AdminDepositRequest() {
       display: isMobile ? 'none' : 'block' 
     },
 
-    // --- NEW: TAB SWITCHER STYLES ---
+    // --- TAB SWITCHER ---
     tabContainer: {
       display: 'flex',
-      gap: '15px',
+      gap: isMobile ? '5px' : '10px',
       marginBottom: '25px',
       background: '#E5E7EB',
       padding: '5px',
       borderRadius: '12px',
-      width: 'fit-content'
+      width: isMobile ? '100%' : 'fit-content', // Full width on mobile
+      boxSizing: 'border-box'
     },
     tabBtn: (isActive) => ({
-      padding: '10px 25px',
+      padding: isMobile ? '10px 8px' : '10px 25px',
       borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
       fontWeight: '600',
-      fontSize: '0.95rem',
+      fontSize: isMobile ? '0.85rem' : '0.95rem',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      justifyContent: 'center',
+      gap: isMobile ? '5px' : '8px',
       transition: 'all 0.3s ease',
       background: isActive ? '#FFFFFF' : 'transparent',
       color: isActive ? '#111827' : '#6B7280',
-      boxShadow: isActive ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
+      boxShadow: isActive ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
+      flex: isMobile ? 1 : 'none', // Equal width on mobile
+      whiteSpace: 'nowrap'
     }),
     badge: (count, isActive) => ({
       background: isActive ? '#00D09C' : '#D1D5DB',
@@ -328,16 +331,20 @@ function AdminDepositRequest() {
       borderRadius: '16px',
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
       border: '1px solid #E5E7EB',
-      overflow: 'hidden'
+      overflow: 'hidden', // Essential for card corner rounding
+      width: '100%',
+      boxSizing: 'border-box'
     },
     tableContainer: {
-      overflowX: 'auto', 
+      width: '100%', // Full width inside card
+      overflowX: 'auto', // Enable horizontal scroll for table only
+      WebkitOverflowScrolling: 'touch', // Smooth scroll on iOS
     },
     table: {
       width: '100%',
       borderCollapse: 'collapse',
       fontSize: '0.95rem',
-      minWidth: '800px'
+      minWidth: '850px' // Force table to be wide enough to show all columns
     },
     th: {
       textAlign: 'left',
@@ -348,13 +355,18 @@ function AdminDepositRequest() {
       borderBottom: '1px solid #E5E7EB',
       textTransform: 'uppercase',
       fontSize: '0.8rem',
-      letterSpacing: '0.5px'
+      letterSpacing: '0.5px',
+      whiteSpace: 'nowrap' // Keep headers on one line
     },
     td: {
       padding: '18px',
       borderBottom: '1px solid #F3F4F6',
       verticalAlign: 'top', 
-      color: '#111827'
+      color: '#111827',
+      // Allow text wrapping but handle words properly
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+      maxWidth: '200px' // Constrain cell width so text wraps
     },
     
     // UI ELEMENTS
@@ -382,11 +394,11 @@ function AdminDepositRequest() {
       cursor: 'pointer',
       fontSize: '0.85rem',
       background: color === 'green' ? '#00D09C' : color === 'blue' ? '#3B82F6' : '#EF4444',
-      marginRight: '8px',
       transition: '0.2s',
       display: 'flex',
       alignItems: 'center',
-      gap: '6px'
+      gap: '6px',
+      whiteSpace: 'nowrap'
     }),
     emptyState: {
       padding: '60px',
@@ -551,7 +563,7 @@ function AdminDepositRequest() {
                       </td>
 
                       <td style={styles.td}>
-                        <div style={{display:'flex'}}>
+                        <div style={{display:'flex', gap: '8px'}}> {/* Added gap between buttons */}
                           <button 
                             onClick={() => handleAction(req._id, req.type, 'approve')}
                             style={styles.actionBtn(req.type === 'deposit' ? 'green' : 'blue')}

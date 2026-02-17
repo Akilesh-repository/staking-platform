@@ -247,7 +247,7 @@ function AdminDashboard() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '10px'
+      gap: '8px'
     },
     
     // MAIN CONTENT
@@ -284,7 +284,9 @@ function AdminDashboard() {
     },
     subText: { 
       color: '#6B7280', 
-      fontSize: isMobile ? '0.9rem' : '1.1rem' 
+      fontSize: '1.1rem',
+      // ✅ FIXED: Hide this text on mobile
+      display: isMobile ? 'none' : 'block' 
     },
     
     // STATS GRID

@@ -144,7 +144,7 @@ function Wallet() {
 
   const fetchWalletData = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost
+      // ✅ CHANGED: Removed localhost for live server compatibility
       const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
       setHistory(res.data.history);
@@ -255,16 +255,17 @@ function Wallet() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '10px'
+      gap: '8px'
     },
 
     // MAIN CONTENT
     main: {
       marginLeft: isMobile ? 0 : '260px', 
       flex: 1,
-      padding: isMobile ? '20px' : '40px 60px', 
+      padding: isMobile ? '20px 15px' : '40px 60px',  // Optimized padding for mobile
       width: '100%',
-      transition: 'margin-left 0.3s ease-in-out'
+      transition: 'margin-left 0.3s ease-in-out',
+      boxSizing: 'border-box'
     },
     
     // Header
@@ -314,14 +315,15 @@ function Wallet() {
     atmCard: {
       background: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)', // Matte Black Gradient
       borderRadius: '20px',
-      padding: '30px',
+      padding: isMobile ? '20px' : '30px', // Adjusted for mobile
       color: 'white',
       boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
       marginBottom: '30px',
       position: 'relative',
       overflow: 'hidden',
       maxWidth: '500px',
-      margin: '0 auto 30px auto'
+      margin: '0 auto 30px auto',
+      boxSizing: 'border-box'
     },
     cardChip: {
       width: '50px',
@@ -338,7 +340,7 @@ function Wallet() {
       marginBottom: '5px'
     },
     cardBalance: {
-      fontSize: '2.5rem',
+      fontSize: isMobile ? '2rem' : '2.5rem', // Adjusted for mobile to stop overflow
       fontWeight: '700',
       color: '#FFFFFF',
       marginBottom: '25px',
@@ -366,7 +368,8 @@ function Wallet() {
     // ACTION GRID
     actionGrid: {
       display: 'flex',
-      gap: '20px',
+      flexDirection: isMobile ? 'column' : 'row', // Fix: stack vertically on mobile
+      gap: '15px',
       marginBottom: '30px',
       maxWidth: '600px',
       margin: '0 auto 30px auto'
@@ -386,19 +389,22 @@ function Wallet() {
       background: 'white',
       color: type === 'deposit' ? '#065F46' : '#991B1B', 
       border: `2px solid ${type === 'deposit' ? '#D1FAE5' : '#FEE2E2'}`,
-      boxShadow: '0 4px 6px rgba(0,0,0,0.02)'
+      boxShadow: '0 4px 6px rgba(0,0,0,0.02)',
+      width: '100%',
+      boxSizing: 'border-box'
     }),
 
     // FORM CARD
     formCard: {
       background: '#FFFFFF',
-      padding: '30px',
+      padding: isMobile ? '20px' : '30px', // Adjusted for mobile
       borderRadius: '16px',
       boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
       marginBottom: '30px',
       border: '1px solid #E5E7EB',
       maxWidth: '600px',
-      margin: '0 auto 30px auto'
+      margin: '0 auto 30px auto',
+      boxSizing: 'border-box'
     },
     
     // --- BANK DETAILS BOX ---
@@ -413,10 +419,11 @@ function Wallet() {
     },
     bankDetailRow: {
       display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row', // Fix: Stacks text on mobile
       justifyContent: 'space-between',
+      alignItems: isMobile ? 'flex-start' : 'center',
       marginBottom: '8px',
-      flexWrap: 'wrap', 
-      gap: '10px'
+      gap: isMobile ? '2px' : '10px'
     },
     detailLabel: {
       fontWeight: '600',
@@ -426,8 +433,9 @@ function Wallet() {
     detailValue: {
       fontWeight: '700',
       color: '#111827',
-      textAlign: 'right',
-      flex: 1
+      textAlign: isMobile ? 'left' : 'right', // Fix alignment
+      flex: 1,
+      wordBreak: 'break-word' // Prevent overflow
     },
 
     input: {
@@ -449,7 +457,8 @@ function Wallet() {
       borderRadius: '10px',
       fontWeight: '700',
       cursor: 'pointer',
-      transition: '0.2s'
+      transition: '0.2s',
+      boxSizing: 'border-box'
     },
 
     // HISTORY TABLE
@@ -468,6 +477,7 @@ function Wallet() {
     },
     tableContainer: {
       overflowX: 'auto',
+      maxWidth: '100%'
     },
     table: {
       width: '100%',

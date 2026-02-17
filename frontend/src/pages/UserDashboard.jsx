@@ -84,6 +84,14 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+const MenuIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
 
 function UserDashboard() {
   const navigate = useNavigate();
@@ -127,6 +135,7 @@ function UserDashboard() {
 
   const fetchAllData = async (userId) => {
     try {
+      // ✅ CHANGED: Removed localhost
       const walletRes = await axios.get(`/api/wallet/${userId}`);
       const stakeRes = await axios.get(`/api/stake/history/${userId}`);
       const totalActive = stakeRes.data
@@ -263,7 +272,15 @@ function UserDashboard() {
     },
     welcomeSection: { display: 'flex', alignItems: 'center' },
     welcomeText: { fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: '800', color: '#111827', margin: 0, letterSpacing: '-1px' },
-    subText: { color: '#6B7280', fontSize: isMobile ? '0.9rem' : '1rem', marginTop: '5px' },
+    
+    // ✅ FIXED: Hide this text on mobile
+    subText: { 
+      color: '#6B7280', 
+      fontSize: '1rem', 
+      marginTop: '5px',
+      display: isMobile ? 'none' : 'block' // HIDDEN ON MOBILE
+    },
+    
     statusBadge: {
       display: isMobile ? 'none' : 'flex', 
       alignItems: 'center',
@@ -416,7 +433,9 @@ function UserDashboard() {
         {/* Header */}
         <div style={styles.header}>
           <div style={styles.welcomeSection}>
-            <button style={styles.menuBtn} onClick={() => setSidebarOpen(true)}>☰</button>
+            <button style={styles.menuBtn} onClick={() => setSidebarOpen(true)}>
+              <MenuIcon />
+            </button>
             <div>
               <h2 style={styles.welcomeText}>Hello, {user.username}</h2>
               <p style={styles.subText}>Your financial command center.</p>

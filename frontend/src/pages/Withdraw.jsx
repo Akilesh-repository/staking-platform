@@ -114,7 +114,6 @@ function Withdraw() {
 
   const fetchBalance = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
     } catch (err) {
@@ -124,7 +123,6 @@ function Withdraw() {
 
   const fetchSavedBanks = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.get(`/api/bank/${userId}`);
       setSavedBanks(res.data); 
     } catch (err) {
@@ -165,7 +163,6 @@ function Withdraw() {
     if (Number(amount) <= 0) return alert("Enter a valid amount");
 
     try {
-      // ✅ CHANGED: Removed localhost
       await axios.post('/api/wallet/withdraw', {
         userId: user._id,
         amount: Number(amount), 
@@ -188,6 +185,12 @@ function Withdraw() {
   // --- CALCULATE TDS ---
   const tdsAmount = amount ? Number(amount) * 0.01 : 0;
   const netPayable = amount ? Number(amount) - tdsAmount : 0;
+
+  // --- HELPER TO TRUNCATE TEXT ---
+  const truncateText = (str, length = 20) => {
+    if (!str) return '';
+    return str.length > length ? str.substring(0, length) + '...' : str;
+  };
 
   // --- STYLES (GrowwPark Premium Theme) ---
   const styles = {
@@ -272,9 +275,10 @@ function Withdraw() {
     main: {
       marginLeft: isMobile ? 0 : '260px', 
       flex: 1,
-      padding: isMobile ? '20px' : '40px 60px', 
+      padding: isMobile ? '20px 15px' : '40px 60px', 
       width: '100%',
-      transition: 'margin-left 0.3s ease-in-out'
+      transition: 'margin-left 0.3s ease-in-out',
+      boxSizing: 'border-box'
     },
     
     // Header
@@ -325,12 +329,13 @@ function Withdraw() {
       width: '100%',
       maxWidth: '600px',
       background: '#FFFFFF',
-      padding: '40px',
+      padding: isMobile ? '25px' : '40px', 
       borderRadius: '20px',
       boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
       border: '1px solid #E5E7EB',
-      marginTop: isMobile ? '60px' : '20px',
-      margin: '0 auto' // Center card if needed
+      marginTop: isMobile ? '20px' : '20px',
+      margin: '0 auto',
+      boxSizing: 'border-box'
     },
     
     // BALANCE DISPLAY
@@ -347,7 +352,10 @@ function Withdraw() {
     },
 
     // FORM ELEMENTS
-    inputGroup: { marginBottom: '20px' },
+    inputGroup: { 
+      marginBottom: '20px',
+      width: '100%' 
+    },
     label: { display: 'block', marginBottom: '8px', color: '#374151', fontWeight: '600', fontSize: '0.9rem' },
     input: {
       width: '100%',
@@ -359,8 +367,12 @@ function Withdraw() {
       background: '#FFFFFF',
       boxSizing: 'border-box'
     },
+    
+    // --- UPDATED SELECT STYLE ---
     select: {
       width: '100%',
+      maxWidth: '100%', 
+      display: 'block',
       padding: '12px',
       border: '2px solid #00D09C',
       borderRadius: '10px',
@@ -370,8 +382,13 @@ function Withdraw() {
       outline: 'none',
       cursor: 'pointer',
       marginBottom: '10px',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box', // Crucial for mobile sizing
+      fontSize: isMobile ? '0.85rem' : '1rem', 
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
+
     manageLink: {
       display: 'block',
       textAlign: 'right',
@@ -431,7 +448,8 @@ function Withdraw() {
       fontWeight: '700',
       cursor: 'pointer',
       boxShadow: '0 4px 6px -1px rgba(239, 68, 68, 0.2)',
-      transition: 'transform 0.2s'
+      transition: 'transform 0.2s',
+      boxSizing: 'border-box'
     }
   };
 
@@ -448,15 +466,9 @@ function Withdraw() {
           <span style={styles.logoText}>GrowwPark</span>
         </div>
         
-        <div 
-          style={styles.navItem} 
-          onClick={() => { navigate('/dashboard'); isMobile && setSidebarOpen(false); }}
-          onMouseOver={(e) => { e.currentTarget.style.background = '#1F2937'; e.currentTarget.style.color = '#F3F4F6'; }}
-          onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9CA3AF'; }}
-        >
+        <div style={{ ...styles.navItem, ...styles.navItemActive }} onClick={() => isMobile && setSidebarOpen(false)}>
           <DashboardIcon /> <span>Dashboard</span>
         </div>
-
         <div 
           style={styles.navItem} 
           onClick={() => { navigate('/wallet'); isMobile && setSidebarOpen(false); }}
@@ -465,7 +477,6 @@ function Withdraw() {
         >
           <WalletIcon /> <span>My Wallet</span>
         </div>
-
         <div 
           style={styles.navItem} 
           onClick={() => { navigate('/staking'); isMobile && setSidebarOpen(false); }}
@@ -474,7 +485,6 @@ function Withdraw() {
         >
           <TrendUpIcon /> <span>Staking Plans</span>
         </div>
-
         <div 
           style={styles.navItem}
           onClick={() => { navigate('/referrals'); isMobile && setSidebarOpen(false); }}
@@ -483,7 +493,6 @@ function Withdraw() {
         >
           <UsersIcon /> <span>Referrals</span>
         </div>
-
         <button 
           onClick={handleLogout} 
           style={styles.logoutBtn}
@@ -522,7 +531,8 @@ function Withdraw() {
               <option value="">-- Select a Bank --</option>
               {savedBanks.map((bank) => (
                 <option key={bank._id} value={bank._id}>
-                  {bank.bankName} ({bank.accountNumber.slice(-4).padStart(bank.accountNumber.length, '•')})
+                  {/* Truncate text to prevent mobile overflow */}
+                  {truncateText(`${bank.bankName} - ${bank.accountNumber}`, 30)}
                 </option>
               ))}
             </select>
@@ -572,7 +582,8 @@ function Withdraw() {
             <div style={{ display: 'grid', gap: '15px' }}>
               <input type="text" name="accountHolder" placeholder="Account Holder Name" value={bankDetails.accountHolder} onChange={handleChange} required style={styles.input} />
               <input type="text" name="accountNumber" placeholder="Account Number" value={bankDetails.accountNumber} onChange={handleChange} required style={styles.input} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+              {/* Stacked Layout on Mobile */}
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '15px' }}>
                 <input type="text" name="ifsc" placeholder="IFSC Code" value={bankDetails.ifsc} onChange={handleChange} required style={styles.input} />
                 <input type="text" name="bankName" placeholder="Bank Name" value={bankDetails.bankName} onChange={handleChange} required style={styles.input} />
               </div>

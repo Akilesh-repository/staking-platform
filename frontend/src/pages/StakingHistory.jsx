@@ -104,7 +104,6 @@ function StakingHistory() {
 
   const fetchHistory = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.get(`/api/stake/history/${userId}`);
       setInvestments(res.data);
       setLoading(false);
@@ -119,7 +118,7 @@ function StakingHistory() {
     navigate('/login');
   };
 
-  // --- HELPERS ---
+  // --- HELPERS (UPDATED) ---
   const calculateDaysLeft = (endDate, status) => {
     if (status === 'completed' || status === 'disabled') {
       return 'Ended';
@@ -127,11 +126,21 @@ function StakingHistory() {
     const today = new Date();
     const end = new Date(endDate);
     const diffTime = end - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Round up so 0.1 days still counts as 1 day remaining
+    const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays < 0) return 'Ended';
-    if (diffDays === 0) return 'Expiring Today';
-    return `${diffDays} Days`;
+    if (totalDays < 0) return 'Ended';
+    if (totalDays === 0) return 'Today';
+
+    // ✅ FIXED: Convert days to Months and Days
+    const months = Math.floor(totalDays / 30); // Approx 30 days per month
+    const days = totalDays % 30;
+
+    if (months > 0) {
+      return `${months}M ${days}D`;
+    }
+    return `${days}D`;
   };
 
   const calculateNextPayout = (nextPayoutDate, status) => {
@@ -235,9 +244,10 @@ function StakingHistory() {
     main: {
       marginLeft: isMobile ? 0 : '260px', 
       flex: 1,
-      padding: isMobile ? '20px' : '40px 60px', 
+      padding: isMobile ? '20px 15px' : '40px 60px', 
       width: '100%',
-      transition: 'margin-left 0.3s ease-in-out'
+      transition: 'margin-left 0.3s ease-in-out',
+      boxSizing: 'border-box'
     },
     
     // Header
@@ -289,10 +299,14 @@ function StakingHistory() {
       borderRadius: '16px',
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
       border: '1px solid #E5E7EB',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      width: '100%',
+      boxSizing: 'border-box'
     },
     tableContainer: {
+      width: '100%',
       overflowX: 'auto',
+      WebkitOverflowScrolling: 'touch',
     },
     table: {
       width: '100%',

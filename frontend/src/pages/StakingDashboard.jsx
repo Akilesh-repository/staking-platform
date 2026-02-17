@@ -54,14 +54,6 @@ const MenuIcon = () => (
 );
 
 // Page Specific Icons
-const ChartIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00D09C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="20" x2="18" y2="10"></line>
-    <line x1="12" y1="20" x2="12" y2="4"></line>
-    <line x1="6" y1="20" x2="6" y2="14"></line>
-  </svg>
-);
-
 const BoltIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -208,7 +200,7 @@ function StakingDashboard() {
     // Header (Mobile Menu)
     headerBar: {
       position: 'absolute',
-      top: '20px',
+      top: '10px', // ✅ FIXED: Pushed up slightly
       left: '20px',
       display: isMobile ? 'block' : 'none',
       zIndex: 50
@@ -235,17 +227,21 @@ function StakingDashboard() {
       textAlign: 'center'
     },
     icon: {
-      fontSize: '3rem',
       marginBottom: '15px',
-      background: 'rgba(0, 208, 156, 0.1)',
       width: '80px',
       height: '80px',
       borderRadius: '50%',
       margin: '0 auto',
-      color: '#00D09C',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      overflow: 'hidden' // Ensures image stays circular
+    },
+    // ✅ NEW: Image Style for the center icon
+    centerImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain'
     },
     title: {
       color: '#111827',
@@ -267,7 +263,7 @@ function StakingDashboard() {
       gridTemplateColumns: isMobile ? '1fr' : '1fr', // Stack on mobile
       gap: '20px'
     },
-    menuBtn: {
+    menuBtnCard: {
       padding: '20px',
       fontSize: '1.1rem',
       fontWeight: '600',
@@ -381,7 +377,8 @@ function StakingDashboard() {
 
         <div style={styles.card}>
           <div style={styles.icon}>
-            <ChartIcon />
+            {/* ✅ FIXED: Using Logo Image instead of Icon */}
+            <img src="/growwpark_logo.jpg" alt="Staking" style={styles.centerImage} />
           </div>
           <h2 style={styles.title}>Staking Hub</h2>
           <p style={styles.subtitle}>Manage your investments and track income.</p>
@@ -390,7 +387,7 @@ function StakingDashboard() {
             
             {/* 1. New Stake */}
             <button 
-              style={{ ...styles.menuBtn, ...styles.btnPrimary }}
+              style={{ ...styles.menuBtnCard, ...styles.btnPrimary }}
               onClick={() => navigate('/staking/create')}
               onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.background = '#00c493'; }}
               onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#00D09C'; }}
@@ -400,7 +397,7 @@ function StakingDashboard() {
 
             {/* 2. Stake History */}
             <button 
-              style={{ ...styles.menuBtn, ...styles.btnSecondary }}
+              style={{ ...styles.menuBtnCard, ...styles.btnSecondary }}
               onClick={() => navigate('/staking/history')} 
               onMouseOver={(e) => { e.currentTarget.style.borderColor = '#00D09C'; e.currentTarget.style.background = '#F9FAFB'; }}
               onMouseOut={(e) => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.background = '#FFFFFF'; }}
@@ -410,7 +407,7 @@ function StakingDashboard() {
 
             {/* 3. Monthly Income History */}
             <button 
-              style={{ ...styles.menuBtn, ...styles.btnSecondary }}
+              style={{ ...styles.menuBtnCard, ...styles.btnSecondary }}
               onClick={() => navigate('/staking/income')}
               onMouseOver={(e) => { e.currentTarget.style.borderColor = '#00D09C'; e.currentTarget.style.background = '#F9FAFB'; }}
               onMouseOut={(e) => { e.currentTarget.style.borderColor = '#E5E7EB'; e.currentTarget.style.background = '#FFFFFF'; }}

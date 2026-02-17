@@ -101,6 +101,96 @@ const ArrowUpSmall = () => (
   </svg>
 );
 
+const CopyIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+  </svg>
+);
+
+const CheckIconSmall = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+
+// --- HELPER COMPONENT FOR COPYABLE ROW ---
+const CopyRow = ({ label, value, isMobile }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const rowStyle = {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    justifyContent: 'space-between',
+    alignItems: isMobile ? 'flex-start' : 'center',
+    marginBottom: '15px',
+    borderBottom: '1px dashed #e2e8f0', 
+    paddingBottom: '8px',
+    width: '100%'
+  };
+
+  const labelStyle = {
+    fontWeight: '600',
+    color: '#475569',
+    fontSize: '0.9rem',
+    marginBottom: isMobile ? '4px' : '0'
+  };
+
+  // Ensure this container fills available space and pushes the button to the right
+  const valueContainerStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: isMobile ? 'space-between' : 'flex-end', // Push to end on desktop, space between on mobile
+    gap: '12px',
+    width: isMobile ? '100%' : 'auto', // Full width on mobile to control layout
+    flex: 1,
+    minWidth: 0 // Allow truncation
+  };
+
+  const valueStyle = {
+    fontWeight: '700',
+    color: '#111827',
+    fontSize: '0.95rem',
+    wordBreak: 'break-word',
+    textAlign: isMobile ? 'left' : 'right',
+    flex: 1 // Take up space
+  };
+
+  const copyBtnStyle = {
+    background: copied ? '#D1FAE5' : '#E2E8F0',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    width: '32px', // Fixed width for alignment
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: copied ? '#065F46' : '#64748B',
+    transition: 'all 0.2s',
+    flexShrink: 0 // Prevent button squishing
+  };
+
+  return (
+    <div style={rowStyle}>
+      <span style={labelStyle}>{label}:</span>
+      <div style={valueContainerStyle}>
+        <span style={valueStyle}>{value}</span>
+        <button onClick={handleCopy} style={copyBtnStyle} title="Copy">
+          {copied ? <CheckIconSmall /> : <CopyIcon />}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
 function Wallet() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -144,7 +234,6 @@ function Wallet() {
 
   const fetchWalletData = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost for live server compatibility
       const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
       setHistory(res.data.history);
@@ -158,7 +247,6 @@ function Wallet() {
     if (!amount || !transactionId) return alert("Please fill all details");
 
     try {
-      // ✅ CHANGED: Removed localhost
       await axios.post('/api/wallet/deposit', {
         userId: user._id,
         amount: Number(amount),
@@ -255,14 +343,14 @@ function Wallet() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '8px'
+      gap: '10px'
     },
 
     // MAIN CONTENT
     main: {
       marginLeft: isMobile ? 0 : '260px', 
       flex: 1,
-      padding: isMobile ? '20px 15px' : '40px 60px',  // Optimized padding for mobile
+      padding: isMobile ? '20px 15px' : '40px 60px', 
       width: '100%',
       transition: 'margin-left 0.3s ease-in-out',
       boxSizing: 'border-box'
@@ -315,7 +403,7 @@ function Wallet() {
     atmCard: {
       background: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)', // Matte Black Gradient
       borderRadius: '20px',
-      padding: isMobile ? '20px' : '30px', // Adjusted for mobile
+      padding: isMobile ? '20px' : '30px',
       color: 'white',
       boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
       marginBottom: '30px',
@@ -340,7 +428,7 @@ function Wallet() {
       marginBottom: '5px'
     },
     cardBalance: {
-      fontSize: isMobile ? '2rem' : '2.5rem', // Adjusted for mobile to stop overflow
+      fontSize: isMobile ? '2rem' : '2.5rem', 
       fontWeight: '700',
       color: '#FFFFFF',
       marginBottom: '25px',
@@ -368,7 +456,7 @@ function Wallet() {
     // ACTION GRID
     actionGrid: {
       display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row', // Fix: stack vertically on mobile
+      flexDirection: isMobile ? 'column' : 'row',
       gap: '15px',
       marginBottom: '30px',
       maxWidth: '600px',
@@ -397,7 +485,7 @@ function Wallet() {
     // FORM CARD
     formCard: {
       background: '#FFFFFF',
-      padding: isMobile ? '20px' : '30px', // Adjusted for mobile
+      padding: isMobile ? '20px' : '30px',
       borderRadius: '16px',
       boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
       marginBottom: '30px',
@@ -416,26 +504,6 @@ function Wallet() {
       marginBottom: '25px',
       fontSize: '0.95rem',
       color: '#334155'
-    },
-    bankDetailRow: {
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row', // Fix: Stacks text on mobile
-      justifyContent: 'space-between',
-      alignItems: isMobile ? 'flex-start' : 'center',
-      marginBottom: '8px',
-      gap: isMobile ? '2px' : '10px'
-    },
-    detailLabel: {
-      fontWeight: '600',
-      color: '#475569',
-      minWidth: '100px'
-    },
-    detailValue: {
-      fontWeight: '700',
-      color: '#111827',
-      textAlign: isMobile ? 'left' : 'right', // Fix alignment
-      flex: 1,
-      wordBreak: 'break-word' // Prevent overflow
     },
 
     input: {
@@ -627,22 +695,12 @@ function Wallet() {
               <h4 style={{marginTop: 0, marginBottom: '15px', color: '#065F46', fontSize: '1rem', borderBottom: '1px solid #00D09C', paddingBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px'}}>
                 <BankIcon /> Company Bank Details
               </h4>
-              <div style={styles.bankDetailRow}>
-                <span style={styles.detailLabel}>Account Name:</span>
-                <span style={styles.detailValue}>GROWWPARK TECHNOLOGIES PRIVATE LIMITED</span>
-              </div>
-              <div style={styles.bankDetailRow}>
-                <span style={styles.detailLabel}>Account No:</span>
-                <span style={styles.detailValue}>44040230542</span>
-              </div>
-              <div style={styles.bankDetailRow}>
-                <span style={styles.detailLabel}>IFSC Code:</span>
-                <span style={styles.detailValue}>SBIN0041181</span>
-              </div>
-              <div style={styles.bankDetailRow}>
-                <span style={styles.detailLabel}>Branch:</span>
-                <span style={styles.detailValue}>AGRI COMM BRANCH AVALAPALLY</span>
-              </div>
+              
+              <CopyRow label="Account Name" value="GROWWPARK TECHNOLOGIES PRIVATE LIMITED" isMobile={isMobile} />
+              <CopyRow label="Account No" value="44040230542" isMobile={isMobile} />
+              <CopyRow label="IFSC Code" value="SBIN0041181" isMobile={isMobile} />
+              <CopyRow label="Branch" value="AGRI COMM BRANCH AVALAPALLY" isMobile={isMobile} />
+
               <p style={{fontSize: '0.85rem', color: '#64748b', marginTop: '15px', fontStyle: 'italic', textAlign: 'center'}}>
                 * Please transfer funds to the account above, then fill out the form below.
               </p>

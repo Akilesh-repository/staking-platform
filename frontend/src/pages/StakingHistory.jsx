@@ -459,7 +459,7 @@ function StakingHistory() {
             <button style={styles.menuBtn} onClick={() => setSidebarOpen(true)}>
               <MenuIcon />
             </button>
-            <h2 style={styles.title}>Investment History</h2>
+            <h2 style={styles.title}>History</h2>
           </div>
           <button style={styles.backBtn} onClick={() => navigate('/staking')}>
             <BackIcon /> Back

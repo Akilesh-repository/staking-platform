@@ -13,7 +13,6 @@ const RocketIcon = () => (
 );
 
 function Register() {
-  // Updated State to include referralCode
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -30,13 +29,9 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.post('/api/auth/register', formData);
       alert(res.data.message); 
-      
-      // ✅ CHANGED: Directly navigate to Login page after registration
       navigate('/login'); 
-      
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Registration Failed");
@@ -233,11 +228,12 @@ function Register() {
 
           {/* REFERRAL CODE INPUT */}
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Referral Code (Optional)</label>
+            <label style={styles.label}>Referral Code (Required)</label>
             <input 
               type="text" 
               name="referralCode" 
               onChange={handleChange} 
+              required 
               style={styles.referralInput}
               placeholder="e.g. REF123"
               onFocus={(e) => {

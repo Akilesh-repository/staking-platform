@@ -28,6 +28,7 @@ import AdminStaking from './pages/AdminStaking';
 import AdminUserManagement from './pages/AdminUserManagement';
 
 // --- 🔴 FIX 1: USE YOUR BACKEND TUNNEL URL ---
+// OLD:
 axios.defaults.baseURL = "";
 
 // --- 🔴 FIX 2: SET THIS TO FALSE (Fixes the CORS Error) ---

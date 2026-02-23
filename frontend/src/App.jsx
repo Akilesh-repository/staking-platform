@@ -29,7 +29,7 @@ import AdminUserManagement from './pages/AdminUserManagement';
 
 // --- 🔴 FIX 1: USE YOUR BACKEND TUNNEL URL ---
 // OLD:
-axios.defaults.baseURL = "";
+axios.defaults.baseURL = "http://gpkgrowth.cloud";
 
 // --- 🔴 FIX 2: SET THIS TO FALSE (Fixes the CORS Error) ---
 axios.defaults.withCredentials = false; 

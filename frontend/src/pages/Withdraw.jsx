@@ -256,7 +256,7 @@ function Withdraw() {
       fontWeight: '500'
     },
     logoutBtn: {
-      marginTop: 'auto', 
+      
       background: '#1F2937',
       border: '1px solid #374151',
       color: '#F87171', 

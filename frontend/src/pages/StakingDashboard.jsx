@@ -122,6 +122,7 @@ function StakingDashboard() {
     },
     // SIDEBAR
     sidebar: {
+      boxSizing: 'border-box',
       width: '260px',
       background: '#111827', 
       color: 'white',
@@ -182,7 +183,11 @@ function StakingDashboard() {
       cursor: 'pointer',
       textAlign: 'center',
       fontWeight: '600',
-      transition: '0.2s'
+      transition: '0.2s',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '8px'
     },
 
     // MAIN CONTENT

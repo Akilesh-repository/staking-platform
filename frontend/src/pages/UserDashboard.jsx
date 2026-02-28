@@ -172,6 +172,7 @@ function UserDashboard() {
     },
     // SIDEBAR
     sidebar: {
+      boxSizing: 'border-box',
       width: '260px',
       background: '#111827', 
       color: 'white',
@@ -186,7 +187,8 @@ function UserDashboard() {
       zIndex: 100, 
       transition: 'transform 0.3s ease-in-out',
       transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none'
+      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none',
+      overflowY: 'auto' // 🟢 ADD THIS LINE HERE
     },
     overlay: {
       position: 'fixed',

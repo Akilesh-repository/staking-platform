@@ -178,6 +178,7 @@ function AdminDashboard() {
     },
     // SIDEBAR
     sidebar: {
+      boxSizing: 'border-box',
       width: '260px',
       background: '#111827', 
       color: 'white',

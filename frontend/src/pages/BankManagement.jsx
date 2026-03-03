@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -134,7 +134,6 @@ function BankManagement() {
 
   const fetchBanks = async (userId) => {
     try {
-      // ✅ CHANGED: Removed localhost
       const res = await axios.get(`/api/bank/${userId}`);
       setBanks(res.data);
     } catch (err) {
@@ -146,7 +145,6 @@ function BankManagement() {
     if (!window.confirm("Are you sure you want to delete this bank account?")) return;
 
     try {
-      // ✅ CHANGED: Removed localhost
       await axios.delete(`/api/bank/${bankId}`);
       fetchBanks(user._id);
     } catch (err) {
@@ -161,7 +159,6 @@ function BankManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ CHANGED: Removed localhost
       await axios.post('/api/bank/add', {
         userId: user._id,
         ...formData
@@ -210,7 +207,8 @@ function BankManagement() {
       zIndex: 100, 
       transition: 'transform 0.3s ease-in-out',
       transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none'
+      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none',
+      overflowY: 'auto'
     },
     overlay: {
       position: 'fixed',
@@ -247,20 +245,24 @@ function BankManagement() {
       fontWeight: '500'
     },
     logoutBtn: {
-       
+      width: '100%',
+      boxSizing: 'border-box',
       background: '#1F2937',
       border: '1px solid #374151',
       color: '#F87171', 
-      padding: '12px',
+      padding: '14px 20px', 
       borderRadius: '12px',
       cursor: 'pointer',
-      textAlign: 'center',
+      fontSize: '1rem',     
+      textAlign: 'left',
       fontWeight: '600',
-      transition: '0.2s',
+      transition: 'all 0.2s ease',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px'
+      justifyContent: 'flex-start', 
+      gap: '12px',          
+      lineHeight: '1',
+      marginTop: '8px'      
     },
 
     // MAIN CONTENT
@@ -436,14 +438,16 @@ function BankManagement() {
         </div>
 
         <div 
-          style={{ ...styles.navItem, background: 'rgba(0, 208, 156, 0.15)', color: '#00D09C', fontWeight: '600' }} 
+          style={styles.navItem} 
           onClick={() => { navigate('/wallet'); isMobile && setSidebarOpen(false); }}
+          onMouseOver={(e) => { e.currentTarget.style.background = '#1F2937'; e.currentTarget.style.color = '#F3F4F6'; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9CA3AF'; }}
         >
           <WalletIcon /> <span>My Wallet</span>
         </div>
 
         <div 
-          style={styles.navItem}
+          style={styles.navItem} 
           onClick={() => { navigate('/staking'); isMobile && setSidebarOpen(false); }}
           onMouseOver={(e) => { e.currentTarget.style.background = '#1F2937'; e.currentTarget.style.color = '#F3F4F6'; }}
           onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9CA3AF'; }}
@@ -460,13 +464,14 @@ function BankManagement() {
           <UsersIcon /> <span>Referrals</span>
         </div>
 
+        {/* ✅ SIDEBAR LOGOUT STYLED CONSISTENTLY */}
         <button 
           onClick={handleLogout} 
           style={styles.logoutBtn}
           onMouseOver={(e) => e.currentTarget.style.background = '#374151'}
           onMouseOut={(e) => e.currentTarget.style.background = '#1F2937'}
         >
-          <LogoutIcon /> Sign Out
+          <LogoutIcon /> Logout
         </button>
       </div>
 
@@ -553,7 +558,8 @@ function BankManagement() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+            {/* ✅ FIXED: REMOVED GRID WRAPPER SO THEY STACK LIKE THE REST */}
+            <div style={styles.inputGroup}>
               <input 
                 type="text" 
                 name="ifsc" 
@@ -565,6 +571,9 @@ function BankManagement() {
                 onFocus={(e) => e.target.style.borderColor = '#00D09C'}
                 onBlur={(e) => e.target.style.borderColor = '#D1D5DB'}
               />
+            </div>
+
+            <div style={styles.inputGroup}>
               <input 
                 type="text" 
                 name="bankName" 

@@ -219,7 +219,8 @@ function Withdraw() {
       zIndex: 100, 
       transition: 'transform 0.3s ease-in-out',
       transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none'
+      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none',
+      overflowY: 'auto'
     },
     overlay: {
       position: 'fixed',
@@ -256,20 +257,24 @@ function Withdraw() {
       fontWeight: '500'
     },
     logoutBtn: {
-      
+      width: '100%',
+      boxSizing: 'border-box',
       background: '#1F2937',
       border: '1px solid #374151',
       color: '#F87171', 
-      padding: '12px',
+      padding: '14px 20px', 
       borderRadius: '12px',
       cursor: 'pointer',
-      textAlign: 'center',
+      fontSize: '1rem',     
+      textAlign: 'left',
       fontWeight: '600',
-      transition: '0.2s',
+      transition: 'all 0.2s ease',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px'
+      justifyContent: 'flex-start', 
+      gap: '12px',          
+      lineHeight: '1',
+      marginTop: '8px'      
     },
 
     // MAIN CONTENT
@@ -369,7 +374,7 @@ function Withdraw() {
       boxSizing: 'border-box'
     },
     
-    // --- UPDATED SELECT STYLE ---
+    // SELECT STYLE
     select: {
       width: '100%',
       maxWidth: '100%', 
@@ -383,7 +388,7 @@ function Withdraw() {
       outline: 'none',
       cursor: 'pointer',
       marginBottom: '10px',
-      boxSizing: 'border-box', // Crucial for mobile sizing
+      boxSizing: 'border-box',
       fontSize: isMobile ? '0.85rem' : '1rem', 
       whiteSpace: 'nowrap',
       overflow: 'hidden',
@@ -467,17 +472,22 @@ function Withdraw() {
           <span style={styles.logoText}>GrowwPark</span>
         </div>
         
-        <div style={{ ...styles.navItem, ...styles.navItemActive }} onClick={() => isMobile && setSidebarOpen(false)}>
-          <DashboardIcon /> <span>Dashboard</span>
-        </div>
         <div 
           style={styles.navItem} 
-          onClick={() => { navigate('/wallet'); isMobile && setSidebarOpen(false); }}
+          onClick={() => { navigate('/dashboard'); isMobile && setSidebarOpen(false); }}
           onMouseOver={(e) => { e.currentTarget.style.background = '#1F2937'; e.currentTarget.style.color = '#F3F4F6'; }}
           onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9CA3AF'; }}
         >
+          <DashboardIcon /> <span>Dashboard</span>
+        </div>
+
+        <div 
+          style={{ ...styles.navItem, background: 'rgba(0, 208, 156, 0.15)', color: '#00D09C', fontWeight: '600' }} 
+          onClick={() => { navigate('/wallet'); isMobile && setSidebarOpen(false); }}
+        >
           <WalletIcon /> <span>My Wallet</span>
         </div>
+
         <div 
           style={styles.navItem} 
           onClick={() => { navigate('/staking'); isMobile && setSidebarOpen(false); }}
@@ -486,6 +496,7 @@ function Withdraw() {
         >
           <TrendUpIcon /> <span>Staking Plans</span>
         </div>
+
         <div 
           style={styles.navItem}
           onClick={() => { navigate('/referrals'); isMobile && setSidebarOpen(false); }}
@@ -494,13 +505,14 @@ function Withdraw() {
         >
           <UsersIcon /> <span>Referrals</span>
         </div>
+
         <button 
           onClick={handleLogout} 
           style={styles.logoutBtn}
           onMouseOver={(e) => e.currentTarget.style.background = '#374151'}
           onMouseOut={(e) => e.currentTarget.style.background = '#1F2937'}
         >
-          <LogoutIcon /> Sign Out
+          <LogoutIcon /> Logout
         </button>
       </div>
 
@@ -532,7 +544,6 @@ function Withdraw() {
               <option value="">-- Select a Bank --</option>
               {savedBanks.map((bank) => (
                 <option key={bank._id} value={bank._id}>
-                  {/* Truncate text to prevent mobile overflow */}
                   {truncateText(`${bank.bankName} - ${bank.accountNumber}`, 30)}
                 </option>
               ))}
@@ -580,14 +591,12 @@ function Withdraw() {
             {/* Manual Bank Details */}
             <h3 style={styles.sectionTitle}>Confirm Account Details</h3>
             
+            {/* ✅ FIXED: ALL INPUTS STACKED VERTICALLY */}
             <div style={{ display: 'grid', gap: '15px' }}>
               <input type="text" name="accountHolder" placeholder="Account Holder Name" value={bankDetails.accountHolder} onChange={handleChange} required style={styles.input} />
               <input type="text" name="accountNumber" placeholder="Account Number" value={bankDetails.accountNumber} onChange={handleChange} required style={styles.input} />
-              {/* Stacked Layout on Mobile */}
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '15px' }}>
-                <input type="text" name="ifsc" placeholder="IFSC Code" value={bankDetails.ifsc} onChange={handleChange} required style={styles.input} />
-                <input type="text" name="bankName" placeholder="Bank Name" value={bankDetails.bankName} onChange={handleChange} required style={styles.input} />
-              </div>
+              <input type="text" name="ifsc" placeholder="IFSC Code" value={bankDetails.ifsc} onChange={handleChange} required style={styles.input} />
+              <input type="text" name="bankName" placeholder="Bank Name" value={bankDetails.bankName} onChange={handleChange} required style={styles.input} />
               <input type="text" name="branch" placeholder="Branch Name" value={bankDetails.branch} onChange={handleChange} required style={styles.input} />
             </div>
 

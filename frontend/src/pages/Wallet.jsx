@@ -142,15 +142,14 @@ const CopyRow = ({ label, value, isMobile }) => {
     marginBottom: isMobile ? '4px' : '0'
   };
 
-  // Ensure this container fills available space and pushes the button to the right
   const valueContainerStyle = {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: isMobile ? 'space-between' : 'flex-end', // Push to end on desktop, space between on mobile
+    justifyContent: isMobile ? 'space-between' : 'flex-end', 
     gap: '12px',
-    width: isMobile ? '100%' : 'auto', // Full width on mobile to control layout
+    width: isMobile ? '100%' : 'auto', 
     flex: 1,
-    minWidth: 0 // Allow truncation
+    minWidth: 0 
   };
 
   const valueStyle = {
@@ -159,7 +158,7 @@ const CopyRow = ({ label, value, isMobile }) => {
     fontSize: '0.95rem',
     wordBreak: 'break-word',
     textAlign: isMobile ? 'left' : 'right',
-    flex: 1 // Take up space
+    flex: 1 
   };
 
   const copyBtnStyle = {
@@ -167,14 +166,14 @@ const CopyRow = ({ label, value, isMobile }) => {
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
-    width: '32px', // Fixed width for alignment
+    width: '32px', 
     height: '32px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: copied ? '#065F46' : '#64748B',
     transition: 'all 0.2s',
-    flexShrink: 0 // Prevent button squishing
+    flexShrink: 0 
   };
 
   return (
@@ -236,7 +235,32 @@ function Wallet() {
     try {
       const res = await axios.get(`/api/wallet/${userId}`);
       setBalance(res.data.balance);
-      setHistory(res.data.history);
+      
+      // ✅ AGGRESSIVE FIX: Filters out ALL internal Staking Plans (old and new)
+      const filteredHistory = res.data.history.filter(tx => {
+        // 1. Must be exactly 'deposit' or 'withdraw'
+        if (tx.type !== 'deposit' && tx.type !== 'withdraw') return false;
+
+        // 2. Check inside paymentDetails for any sign of a staking plan
+        if (tx.paymentDetails) {
+          const method = tx.paymentDetails.method || '';
+          const tId = tx.paymentDetails.transactionId || '';
+          const note = tx.paymentDetails.note || '';
+
+          // If it has 'System' tag, 'INV-' in the ID, or 'Investment' in the notes, hide it!
+          if (
+            method.toLowerCase() === 'system' || 
+            tId.startsWith('INV-') || 
+            note.includes('Investment')
+          ) {
+            return false;
+          }
+        }
+        
+        return true; // Keep everything else (Real Deposits & Real Bank Withdrawals)
+      });
+
+      setHistory(filteredHistory);
     } catch (err) {
       console.error("Error fetching wallet:", err);
     }
@@ -294,7 +318,8 @@ function Wallet() {
       zIndex: 100, 
       transition: 'transform 0.3s ease-in-out',
       transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none'
+      boxShadow: isMobile && sidebarOpen ? '5px 0 15px rgba(0,0,0,0.5)' : 'none',
+      overflowY: 'auto'
     },
     overlay: {
       position: 'fixed',
@@ -331,20 +356,24 @@ function Wallet() {
       fontWeight: '500'
     },
     logoutBtn: {
-       
+      width: '100%',
+      boxSizing: 'border-box',
       background: '#1F2937',
       border: '1px solid #374151',
       color: '#F87171', 
-      padding: '12px',
+      padding: '14px 20px', 
       borderRadius: '12px',
       cursor: 'pointer',
-      textAlign: 'center',
+      fontSize: '1rem',     
+      textAlign: 'left',
       fontWeight: '600',
-      transition: '0.2s',
+      transition: 'all 0.2s ease',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: '10px'
+      justifyContent: 'flex-start', 
+      gap: '12px',          
+      lineHeight: '1',
+      marginTop: '8px'      
     },
 
     // MAIN CONTENT
@@ -402,7 +431,7 @@ function Wallet() {
 
     // --- ATM CARD STYLE ---
     atmCard: {
-      background: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)', // Matte Black Gradient
+      background: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)', 
       borderRadius: '20px',
       padding: isMobile ? '20px' : '30px',
       color: 'white',
@@ -498,7 +527,7 @@ function Wallet() {
     
     // --- BANK DETAILS BOX ---
     bankDetailsBox: {
-      background: '#F0FDFA', // Light teal/green background
+      background: '#F0FDFA', 
       border: '1px dashed #00D09C',
       borderRadius: '12px',
       padding: '20px',
@@ -634,7 +663,7 @@ function Wallet() {
           onMouseOver={(e) => e.currentTarget.style.background = '#374151'}
           onMouseOut={(e) => e.currentTarget.style.background = '#1F2937'}
         >
-          <LogoutIcon /> Sign Out
+          <LogoutIcon /> Logout
         </button>
       </div>
 

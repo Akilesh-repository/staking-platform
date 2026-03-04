@@ -5,10 +5,24 @@ import { useNavigate, Link } from 'react-router-dom';
 // --- ICONS (SVGs) ---
 const HandWaveIcon = () => (
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00D09C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
-    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
-    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2-2v0"></path>
+    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2-2v2"></path>
+    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2-2v8"></path>
     <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+  </svg>
+);
+
+const EyeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+    <line x1="1" y1="1" x2="23" y2="23"></line>
   </svg>
 );
 
@@ -17,6 +31,9 @@ function Login() {
     username: '',
     password: ''
   });
+  
+  // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,7 +43,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ FIXED: Explicitly pointing to Localhost 5000
       const res = await axios.post('/api/auth/login', formData);
       
       // Save user info to browser storage
@@ -113,6 +129,36 @@ function Login() {
       color: '#111827',
       boxSizing: 'border-box'
     },
+    // Password Wrapper for Eye Icon
+    passwordWrapper: {
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%'
+    },
+    passwordInput: {
+      width: '100%',
+      padding: '14px 45px 14px 16px', // Extra right padding so text doesn't hide behind icon
+      fontSize: '1rem',
+      border: '1px solid #D1D5DB',
+      borderRadius: '10px',
+      outline: 'none',
+      transition: 'all 0.3s ease',
+      background: '#F9FAFB',
+      color: '#111827',
+      boxSizing: 'border-box'
+    },
+    eyeBtn: {
+      position: 'absolute',
+      right: '12px',
+      background: 'transparent',
+      border: 'none',
+      cursor: 'pointer',
+      padding: '0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     forgotLink: {
       display: 'block',
       textAlign: 'right',
@@ -188,22 +234,32 @@ function Login() {
 
           <div style={styles.inputGroup}>
             <label style={styles.label}>Password</label>
-            <input 
-              type="password" 
-              name="password" 
-              onChange={handleChange} 
-              required 
-              style={styles.input}
-              placeholder="Enter your password"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#00D09C';
-                e.target.style.background = '#FFFFFF';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#D1D5DB';
-                e.target.style.background = '#F9FAFB';
-              }}
-            />
+            <div style={styles.passwordWrapper}>
+              <input 
+                type={showPassword ? "text" : "password"} 
+                name="password" 
+                onChange={handleChange} 
+                required 
+                style={styles.passwordInput}
+                placeholder="Enter your password"
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#00D09C';
+                  e.target.style.background = '#FFFFFF';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#D1D5DB';
+                  e.target.style.background = '#F9FAFB';
+                }}
+              />
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)} 
+                style={styles.eyeBtn}
+                title={showPassword ? "Hide Password" : "Show Password"}
+              >
+                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
+            </div>
           </div>
 
           {/* Forgot Password Link */}
